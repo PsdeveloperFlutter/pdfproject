@@ -103,6 +103,7 @@ class _AnnotatePDFScreenState extends State<AnnotatePDFScreen> {
   // ✅ Store comments as a list of maps
   List<Map<String, dynamic>> comments = [];
 
+  PdfTextSelectionChangedDetails? selectedTextDetails;
 
   @override
   Widget build(BuildContext context) {
@@ -140,6 +141,7 @@ class _AnnotatePDFScreenState extends State<AnnotatePDFScreen> {
                   icon: Icon(Icons.highlight, color: Colors.white),
                   onPressed: () {
                     // TODO: Implement Highlight functionality
+
                   },
                 ),
 

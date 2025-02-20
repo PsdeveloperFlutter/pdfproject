@@ -158,10 +158,10 @@ class PdfMain extends ConsumerWidget {
                                       icon: Icon(Icons.edit, color: Colors.blue),
                                     ),
 
-                                    IconButton(onPressed: (){
-                                      Navigator.push(context, MaterialPageRoute(builder: (context)=>
-                                ExtractAndEditPDFScreen( pdfPath:dataofpdf[index])));
-                                    }, icon: Icon(Icons.dataset,color: Colors.green.shade500,)),
+                                //     IconButton(onPressed: (){
+                                //       Navigator.push(context, MaterialPageRoute(builder: (context)=>
+                                // ExtractAndEditPDFScreen( pdfPath:dataofpdf[index])));
+                                //     }, icon: Icon(Icons.dataset,color: Colors.green.shade500,)),
                                   ],
                                 ),
                               )
