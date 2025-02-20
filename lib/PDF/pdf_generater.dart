@@ -31,7 +31,8 @@ Color selectcolor,
 int font_size_title,
 int font_size_subtitle,
 int font_size_description,
-int  set_title_fontweight
+int  set_title_fontweight,
+Uint8List? imageBytes,
 )async{
   try{
 
@@ -53,6 +54,13 @@ int  set_title_fontweight
       pw.Page(
         margin: pw.EdgeInsets.all(32), // Add margin for a better layout
         build: (_) {
+          // 🛠️ Check if imageBytes is null before proceeding
+          if (imageBytes == null) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text("Please select an image first!")),
+            ); // 🚀 Prevents further execution
+          }
+
           return pw.Container(
             decoration: pw.BoxDecoration(
               border: pw.Border.all(color: PdfColors.black, width: 2), // Border for styling
@@ -110,6 +118,21 @@ int  set_title_fontweight
 
                 // Footer
                 pw.Divider(thickness: 2, color: PdfColors.grey),
+
+                // 🛠️ Only add image if `imageBytes` is NOT null
+                if (imageBytes != null)
+                  pw.Center(
+                    child: pw.Image(
+                      pw.MemoryImage(imageBytes),
+                      fit: pw.BoxFit.cover,
+                      width: 400,
+                      height: 400,
+                    ),
+                  ),
+
+
+                pw.Divider(thickness: 2, color: PdfColors.grey),
+                pw.SizedBox(height: 15),
                 pw.Align(
                   alignment: pw.Alignment.centerRight,
                   child: pw.Text(

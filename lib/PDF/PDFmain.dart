@@ -1,3 +1,6 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
@@ -226,6 +229,10 @@ class PdfMain extends ConsumerWidget {
   //This is Method for the Second Page UI make sure of this .
   Widget seconddpage(BuildContext context,ref  ) {
 
+    //this is for selecting the image make sure of this by the Riverpod StateManagement
+
+    XFile ? image;
+
     //set fontWeight of Title in PDF
     int ? set_title_fontweight;
 
@@ -274,6 +281,9 @@ class PdfMain extends ConsumerWidget {
       "Amber": Colors.amber,
       "Indigo": Colors.indigo,
     };
+
+    final imageFile = ref.watch(setimage); // Listen to image changes
+    final imageNotifier = ref.read(setimage.notifier); // Get notifier to modify state
 
     return
       SingleChildScrollView(
@@ -607,6 +617,66 @@ class PdfMain extends ConsumerWidget {
                       ],
                     ),
                   )
+
+
+                  ,
+                  SizedBox(height:15),
+                  Center(child: Text("Set Image here ",style:GoogleFonts.aboreto(fontWeight:FontWeight.bold,fontSize: 15))),
+
+                  SizedBox(height: 15,),
+
+                  //here We select the image by the camera and by Gallery
+                  Center(
+                    child: imageFile == null
+                        ? Text(
+                      "No Image Selected",
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    )
+                        : Card(
+                      elevation: 5, // ✅ Slightly stronger elevation for a shadow effect
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30), // ✅ Matches border radius
+                      ),
+                      child: Container(
+                        height: 200,
+                        width: 200,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(30),
+                          border: Border.all(color: Colors.white, width: 2), // ✅ Improved border thickness
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.2), // ✅ Soft shadow effect
+                              blurRadius: 10,
+                              spreadRadius: 2,
+                              offset: Offset(0, 5),
+                            ),
+                          ],
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(30),
+                          child: Image.file(
+                            imageFile!,
+                            fit: BoxFit.cover, // ✅ Ensures full coverage of the container
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                  ,
+                  SizedBox(height: 15,),
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      ElevatedButton(onPressed: ()=>imageNotifier.setimagebycamera(), child: Text("Camera",style: GoogleFonts.aboreto(fontSize: 15),),),
+                      SizedBox(width: 12,),
+                      ElevatedButton(onPressed: () =>imageNotifier.setimagebygallery(), child: Text("Gallery",style: GoogleFonts.aboreto(fontSize: 15)),),
+
+                    ],
+                  ),
+
                 ],
               ),
 
@@ -618,48 +688,63 @@ class PdfMain extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
+                      // Step 1: Check if an image is selected
+                      if (imageFile == null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("Please select an image first!")),
+                        );
+                        return; // 🚀 Prevents further execution
+                      }
 
-                      if(title.text.toString().isNotEmpty && subtitle.text.toString().isNotEmpty && description.text.toString().isNotEmpty)
-                      {
-                        pdf_gen.pdfgen(
-                            title.text.toString(),
-                            subtitle.text.toString(),
-                            description.text.toString(),
+                      Uint8List? imageBytes;
+
+                      try {
+                        // Step 2: Safely read the image file
+                        imageBytes = await imageFile!.readAsBytes();
+                      } catch (e) {
+                        print("Error reading image file: $e");
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("Error reading image file.")),
+                        );
+                        return; // 🚀 Prevents further execution
+                      }
+
+                      // Step 3: Check if all text fields are filled
+                      if (title.text.isNotEmpty &&
+                          subtitle.text.isNotEmpty &&
+                          description.text.isNotEmpty) {
+
+                        // Step 4: Call PDF Generation Function
+                        await pdf_gen.pdfgen(
+                            title.text.trim(),
+                            subtitle.text.trim(),
+                            description.text.trim(),
                             context,
-                            selectfont??"Roboto-Black.ttf",
-                            selectcolor ?? Colors.black,
-                            font_size_title ,
+                            selectfont ?? "Roboto-Black.ttf",  // Default font
+                            selectcolor ?? Colors.black,       // Default color
+                            font_size_title,
                             font_size_subtitle,
                             font_size_description,
-                            set_title_fontweight!
-                        ).then((value){
-                          return  ref.refresh(pdf_view);
+                            set_title_fontweight ?? 4,         // Default font weight
+                            imageBytes
+                        ).then((value) {
+                          ref.refresh(pdf_view);
                         });
 
-
-                      }
-                      else {
-
-                        void showAwesomeSnackbarforFailure(BuildContext context) {
-                          final snackBar = SnackBar(
-                            elevation: 0,
-                            behavior: SnackBarBehavior.floating,
-                            backgroundColor: Colors.transparent,
-                            content: AwesomeSnackbarContent(
-                              title: 'Failure!',
-                              message: 'Please Fill all details .',
-                              contentType: ContentType.failure, // success, warning, help, failure
-                            ),
-                          );
-
-                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                        }
-
-                        //Show When Pdf creation is Fail due to some reason
-                        showAwesomeSnackbarforFailure(context);
-
-
+                      } else {
+                        // Show Snackbar for missing details
+                        final snackBar = SnackBar(
+                          elevation: 0,
+                          behavior: SnackBarBehavior.floating,
+                          backgroundColor: Colors.transparent,
+                          content: AwesomeSnackbarContent(
+                            title: 'Failure!',
+                            message: 'Please Fill all details.',
+                            contentType: ContentType.failure, // success, warning, help, failure
+                          ),
+                        );
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
                       }
                     },
                     child: Text("Generate PDF"),

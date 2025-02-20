@@ -1,8 +1,10 @@
 import 'dart:ffi';
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:image_picker/image_picker.dart';
 import'package:riverpod/riverpod.dart';
 
 
@@ -171,3 +173,34 @@ final List<FontWeight> fontWeights = [
   FontWeight.w800,
   FontWeight.w900,
 ];
+
+
+
+
+
+//This is the state notifier for the managing the state for the StateNotifier Provider getting the image and set to the pdf make sure of this
+
+class Imagefile extends StateNotifier<File?>{
+  Imagefile():super(null);
+
+  final image_picker=ImagePicker();
+  //Set the Image by the Camera
+  Future<void> setimagebycamera()async{
+    final XFile? pickedfile=await image_picker.pickImage(source: ImageSource.camera);
+    if(pickedfile!=null){
+      state=File(pickedfile.path);
+    }
+  }
+  //Set the Image by the Gallery
+  Future<void> setimagebygallery()async{
+    final XFile? pickedfile=await image_picker.pickImage(source: ImageSource.gallery);
+    if(pickedfile!=null){
+      state=File(pickedfile.path);
+    }
+  }
+
+}
+
+final setimage=StateNotifierProvider<Imagefile,File?>((ref){
+  return Imagefile();
+});
