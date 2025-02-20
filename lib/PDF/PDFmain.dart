@@ -285,6 +285,10 @@ class PdfMain extends ConsumerWidget {
     final imageFile = ref.watch(setimage); // Listen to image changes
     final imageNotifier = ref.read(setimage.notifier); // Get notifier to modify state
 
+    //It is the Slider value make sure of this set the width and height of the image select by  User
+    double sliderValuewidth=10.0;
+    double sliderValueheight=10.0;
+
     return
       SingleChildScrollView(
         child: Center(
@@ -637,30 +641,34 @@ class PdfMain extends ConsumerWidget {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30), // ✅ Matches border radius
                       ),
-                      child: Container(
-                        height: 200,
-                        width: 200,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(30),
-                          border: Border.all(color: Colors.white, width: 2), // ✅ Improved border thickness
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.2), // ✅ Soft shadow effect
-                              blurRadius: 10,
-                              spreadRadius: 2,
-                              offset: Offset(0, 5),
+                      child: Consumer(
+                        builder:(Context,ref , child){
+                          return Container(
+                            height: ref.watch(sliderProviderheight),
+                            width: ref.watch(sliderProviderwidth),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(30),
+                              border: Border.all(color: Colors.white, width: 2), // ✅ Improved border thickness
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.2), // ✅ Soft shadow effect
+                                  blurRadius: 10,
+                                  spreadRadius: 2,
+                                  offset: Offset(0, 5),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(30),
-                          child: Image.file(
-                            imageFile!,
-                            fit: BoxFit.cover, // ✅ Ensures full coverage of the container
-                          ),
-                        ),
-                      ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(30),
+                              child: Image.file(
+                                imageFile!,
+                                fit: BoxFit.cover, // ✅ Ensures full coverage of the container
+                              ),
+                            ),
+                          );
+                        }
+                      )
                     ),
                   )
                   ,
@@ -680,6 +688,49 @@ class PdfMain extends ConsumerWidget {
                 ],
               ),
 
+
+
+              SizedBox(height:10),
+              ExpansionTile(
+               title: Text("Set Width of Image ",style:GoogleFonts.aboreto(fontSize: 15)),
+                children: [
+                Consumer(builder: (context,ref,child){
+                  final sliderValue = ref.watch(sliderProviderwidth); // Watch for changes
+                  return                   Slider(
+                    value: ref.watch(sliderProviderwidth),
+                    inactiveColor: Colors.blue.shade500,
+                    activeColor: Colors.green.shade500,
+                    thumbColor: Colors.yellow.shade500,
+                    min: 0,
+                    max: 300,
+                    onChanged: (newValue) {
+                      ref.read(sliderProviderwidth.notifier).update((state)=>newValue); // Update state
+                    },
+                  );
+                })
+                ],
+              ),
+
+              SizedBox(height:10),
+              ExpansionTile(
+                title: Text("Set Height of Image ",style:GoogleFonts.aboreto(fontSize: 15)),
+                children: [
+                  Consumer(builder: (context,ref,child){
+                    final sliderValue = ref.watch(sliderProviderheight); // Watch for changes
+                    return                   Slider(
+                      value: ref.watch(sliderProviderheight),
+                      min: 0,
+                      max: 300,
+                      inactiveColor: Colors.blue.shade500,
+                      activeColor: Colors.green.shade500,
+                      thumbColor: Colors.yellow.shade500,
+                      onChanged: (newValue) {
+                        ref.read(sliderProviderheight.notifier).update((state)=>newValue); // Update state
+                      },
+                    );
+                  })
+                ],
+              ),
 
 
               SizedBox(height: 10,),

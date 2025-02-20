@@ -204,3 +204,12 @@ class Imagefile extends StateNotifier<File?>{
 final setimage=StateNotifierProvider<Imagefile,File?>((ref){
   return Imagefile();
 });
+
+
+//set the width and height of the Image Using Riverpod State Management
+final sliderProviderwidth = StateProvider<double>((ref) => 0.5); // Default value: 0.5
+
+//set the width and height of the Image Using Riverpod State Management
+final sliderProviderheight = StateProvider<double>((ref) => 0.5); // Default value: 0.5
+
+
