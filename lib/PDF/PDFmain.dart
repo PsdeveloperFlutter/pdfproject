@@ -139,7 +139,7 @@ class PdfMain extends ConsumerWidget {
                                     }, icon: Icon(Icons.delete,color: Colors.red,)),
 
                                     IconButton(onPressed: ()async{
-                                      convertpfttoimage(dataofpdf[index],1);
+                                      convertpfttoimage(dataofpdf[index],1,context);
                                     }, icon: Icon(Icons.image,color: Colors.green,)),
 
 

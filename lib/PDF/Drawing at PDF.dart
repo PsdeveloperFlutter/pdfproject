@@ -84,58 +84,68 @@ class _SignatureScreenState extends State<SignatureScreen> {
             Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Icon(Icons.save,color: Colors.deepPurple,),
-                      TextButton(
-                        onPressed: () async {
-                          String? savedPath = await saveSignature();
-                          if (savedPath != null) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text("Signature saved successfully!")),
-                            );
-                          }
-                        },
-                        child: Text("Save",
+                  GestureDetector(
+                   onTap: ()async{
+    String? savedPath = await saveSignature();
+    if (savedPath != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Signature saved successfully!")),
+      );
+    }
+                   },
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Icon(Icons.save,color: Colors.deepPurple,),
+                        Text("Save",
                             style: GoogleFonts.aboreto(
                                 fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold)),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                   SizedBox(width: 10),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      IconButton(onPressed: (){
-                        // Show the color picker dialog
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return ColorPickerDialog();
-                          },
-                        );
-                      }, icon: Icon(Icons.color_lens,color: Colors.deepPurple,)),
-                      Text("Set Colour ",style: GoogleFonts.cabinCondensed(fontSize: 15),)
-                    ],
+                  GestureDetector(
+
+                   onTap: (){
+
+
+                     showDialog(
+                       context: context,
+                       builder: (BuildContext context) {
+                         return ColorPickerDialog();
+                       },
+                     );
+
+                   },
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        IconButton(onPressed: (){
+                          // Show the color picker dialog
+
+                        }, icon: Icon(Icons.color_lens,color: Colors.deepPurple,)),
+                        Text("Set Colour ",style: GoogleFonts.cabinCondensed(fontSize: 15),)
+                      ],
+                    ),
                   ),
                   SizedBox(width: 10),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Icon(Icons.delete,color: Colors.deepPurple,),
-                      TextButton(
-                        onPressed: () {
-                          signaturePadKey.currentState!.clear();
-                        },
-                        child: Text("Clear",
+                  GestureDetector(
+
+                    onTap: (){
+                      signaturePadKey.currentState!.clear();
+                    },
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Icon(Icons.delete,color: Colors.deepPurple,),
+                        Text("Clear",
                             style: GoogleFonts.aboreto(
                                 fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold)),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ],
               ),

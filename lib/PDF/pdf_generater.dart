@@ -65,7 +65,7 @@ Uint8List? imageBytes,
             decoration: pw.BoxDecoration(
               border: pw.Border.all(color: PdfColors.black, width: 2), // Border for styling
               borderRadius: pw.BorderRadius.circular(10),
-              color: PdfColor(0.95, 0.95, 0.95), // Light background color
+              color: PdfColor(1.0,1.0,1.0) // Light background color
             ),
             padding: pw.EdgeInsets.all(20), // Padding inside container
             child: pw.Column(
