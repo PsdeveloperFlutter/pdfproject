@@ -59,12 +59,12 @@ final text_field_Manage=StateNotifierProvider<text_field_controller,TextEditingC
 
 //Now I am setting the Future Provider with GetXstorage
 
-final pdf_view=FutureProvider<List<String>>((ref)async{
-final storage=GetStorage();
-const String pdfListKey = "pdf_list";
-await Future.delayed(Duration(seconds: 5));
-List<dynamic>?storedata=storage.read(pdfListKey);
-List<String>data_pdf=storedata?.map((e)=>e.toString()).toList()??[];
+  final pdf_view=FutureProvider<List<String>>((ref)async{
+  final storage=GetStorage();
+  const String pdfListKey = "pdf_list";
+  await Future.delayed(Duration(seconds: 5));
+  List<dynamic>?storedata=storage.read(pdfListKey);
+  List<String>data_pdf=storedata?.map((e)=>e.toString()).toList()??[];
 return data_pdf;
 
 });
