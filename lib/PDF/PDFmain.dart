@@ -7,6 +7,7 @@ import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:open_file/open_file.dart';
+import 'package:pdfproject/PDF/Form_PDF.dart';
 import 'package:pdfproject/PDF/Table_Pdf.dart';
 import 'package:pdfproject/PDF/pdf_generater.dart';
 import 'package:get_storage/get_storage.dart';
@@ -186,6 +187,10 @@ class PdfMain extends ConsumerWidget {
 
           //This is the Third Page in Pageview for showing table create pdf option
           table_pdf(),
+
+          //This is the Third page of the pdf for the Form make sure of this
+
+          FillPdfScreen(),
         ],
         scrollDirection: Axis.horizontal,
 
@@ -198,7 +203,7 @@ class PdfMain extends ConsumerWidget {
             backgroundColor: Colors.blue.shade700,
             currentIndex: currentIndex, // Set the current index
             selectedItemColor: Colors.amber[800],
-            unselectedItemColor: Colors.white,
+            unselectedItemColor: Colors.blue.shade500,
             onTap: (index) {
               ref.read(indexget.notifier).index_value(index);
               ref.read(indexget.notifier).showindex();
@@ -217,6 +222,10 @@ class PdfMain extends ConsumerWidget {
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.edit),
+                label: 'Create',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.format_align_center),
                 label: 'Create',
               ),
             ],
